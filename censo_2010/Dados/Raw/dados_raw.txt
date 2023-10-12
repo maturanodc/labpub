@@ -5,4 +5,4 @@ As bases originais, arquivos .txt em formato ASCII são disponibilizadas pelo IB
 
 Nesse link do Google Drive:
   https://drive.google.com/file/d/10MJ1jPcnvf0TDJ_wWELpTzjo6HwMknyb/view?usp=sharing
-deixo as bases em .txt, necessarias para rodar o comando `datazoom_censo` no arquivo `master.do`.
+deixo as bases em .txt necessarias para rodar o comando `datazoom_censo` no arquivo `master.do`.
