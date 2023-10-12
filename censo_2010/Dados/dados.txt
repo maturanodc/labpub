@@ -4,5 +4,5 @@ As bases originais, arquivos .txt em formato ASCII são disponibilizadas pelo IB
   https://www.ibge.gov.br/estatisticas/sociais/populacao/9662-censo-demografico-2010.html?edicao=10503&t=microdados
 
 Nesse link do Google Drive:
-  https://drive.google.com/file/d/1tTN6aYLKA_Kqx6ZRQsIAuJjB40LJmPyp/view?usp=sharing
-deixo as bases separadas por UF em .txt (dentro da pasta Raw) e .dta, bem como a base final já tratadas através do comando `datazoom_censo` no arquivo `tratamento_censo.do`.
+  https://drive.google.com/file/d/1Pv6c_4M6goyisvAwfc2suCHfM5DVUVWa/view?usp=sharing
+deixo as bases separadas por UF e a base final ja tratada pelo comando `datazoom_censo`, em .dta.
