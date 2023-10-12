@@ -18,7 +18,28 @@ foreach uf in "AC" "AL" "AP" "AM" "BA" "CE" "DF" "ES" "GO" "MA" "MT" "MS" ///
 		gen `w'_frac = `w'_m / (`w'_h + `w'_m)
 		drop x y `w'_h `w'_m
 	}
-	drop if v6514 == 1 | v6526 == 1 | v6528 == 1 | v6530 == 1 | v6532 == 1
+	if "`uf'" == "SP" {
+		drop if v6513 <= 570.00
+	}
+	else if "`uf'" == "RJ" {
+		drop if v6513 <= 780.46
+
+	}
+	else if "`uf'" == "PR" {
+		drop if v6513 <= 707.63
+
+	}
+	else if "`uf'" == "SC" {
+		drop if v6513 <= 632.25
+
+	}
+	else if "`uf'" == "RS" {
+		drop if v6513 <= 567.98
+
+	}
+	else {
+		drop if v6513 <= 510
+	}
 	keep v0001 v0002 v0300 v0010 v0601 $rendimentos v6511_frac-v6532_frac
 	tempfile base`uf'
 	save `base`uf''
