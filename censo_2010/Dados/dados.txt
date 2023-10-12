@@ -1,8 +1,8 @@
-As bases de dados do censo são muito grandes. Não é possível subi-las aqui.
+As bases de dados dessa pasta são construidas rodando o do-file `master.do`.
 
-As bases originais, arquivos .txt em formato ASCII são disponibilizadas pelo IBGE em
-  https://www.ibge.gov.br/estatisticas/sociais/populacao/9662-censo-demografico-2010.html?edicao=10503&t=microdados
+Além das bases de dados por UF `CENSO10_AC.dta` até `CENSO10_TO.dta`, criadas
+pelo loop das linhas `11` a `14` do `master.do`, os dofiles `censo_tratamento_mean.do`
+e `censo_tratamento_lowest.do` criam também as bases `base_20231012_mean.dta` e
+`base_20231012_lowest.dta`.
 
-Nesse link do Google Drive:
-  https://drive.google.com/file/d/1Pv6c_4M6goyisvAwfc2suCHfM5DVUVWa/view?usp=sharing
-deixo as bases separadas por UF e a base final ja tratada pelo comando `datazoom_censo`, em .dta.
+O arquivo `master.do` requer apenas ps dados baixados da pasta \Raw\.
