@@ -1,9 +1,0 @@
-As bases de dados do censo são muito grandes. Não é possível subi-las aqui.
-
-As bases originais, arquivos .txt em formato ASCII são disponibilizadas pelo IBGE em
-  https://www.ibge.gov.br/estatisticas/sociais/populacao/9662-censo-demografico-2010.html?edicao=10503&t=microdados
-
-Nesse link do Google Drive:
-  https://drive.google.com/drive/u/1/folders/1qbs4TYvW0NUfczuACKN9V7oK7pIekyZX
-deixo as bases separadas por UF em .txt e .dta, já tratadas através do programa em "abre_censo.R"; basta
-baixá-las para usar diretamente no Stata.
