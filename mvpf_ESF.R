@@ -166,7 +166,7 @@ mvpf <- function(
            ( (- (  mort0a1[t] * frac_0a1 +
                    mort1a4[t] * frac_1a4 + 
                    mort15a59[t] * frac_15a59 +
-                   mort59mais[t] * frac_59mais) * vsl / 1000 ) +
+                   mort59mais[t] * frac_59mais) * vsl / 1000 ) -
                crowdout[t] * custo +
                emprego[t] * rend_benef * frac_N_NE * (1 - alq_trib) +
                matricula[t] * rend_benef * frac_N_NE * (1 - alq_trib) * ret_ed
