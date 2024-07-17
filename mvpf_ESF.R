@@ -218,6 +218,7 @@ e_1, e_2, e_3, e_4, e_5, e_6, e_7, e_8,
 m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8)
   
 mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego, matricula)
+# Resultado de 3.760776
 
 # CI por bootstrapping
 
@@ -260,3 +261,4 @@ resultado[i] <- mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego,
 
 hist(as.numeric(resultado))
 quantile(as.numeric(resultado), probs = c(0.05, 0.95))
+# Resultado de 3.284624, 4.285453
