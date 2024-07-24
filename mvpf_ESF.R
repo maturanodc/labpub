@@ -109,15 +109,15 @@ rm(df, df11, df12, df13, df14, df15, df16, df17, df21, df22, df23,
 
 # Montagem de dataframe de impactos
 
-mort_0a1 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 1:3) %>% 
+mort0a1 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 1:3) %>% 
   rename(est_0a1 = Estimativa, ep_0a1 = Erro.padrão)
-mort_1a4 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 5:6) %>% 
+mort1a4 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 5:6) %>% 
   rename(est_1a4 = Estimativa, ep_1a4 = Erro.padrão)
-mort_15a59 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 8:9) %>% 
+mort15a59 <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 8:9) %>% 
   rename(est_15a59 = Estimativa, ep_15a59 = Erro.padrão)
-mort_59mais <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 11:12) %>% 
+mort59mais <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 3:11, colIndex = 11:12) %>% 
   rename(est_59mais = Estimativa, ep_59mais = Erro.padrão)
-mortalidade <- cbind(mort_0a1, mort_1a4,mort_15a59,mort_59mais)
+mortalidade <- cbind(mort0a1, mort1a4,mort15a59,mort59mais)
 
 crowdout <- read.xlsx("ESF_v2.xlsx", "Dados", rowIndex = 14:27, colIndex = 1:3) %>% 
   rename(est_crowdout = Estimativa, ep_crowdout = Erro.padrão)
@@ -140,7 +140,14 @@ df <- merge(df, matricula, by = "t")
 df <- merge(df, natalidade, by = "t")
 df <- merge(df, oferta, by = "t")
 
-rm(crowdout,emprego,matricula,mortalidade,natalidade,oferta,mort_0a1,mort_1a4,mort_15a59,mort_59mais)
+rm(crowdout,emprego,matricula,mortalidade,natalidade,oferta,mort0a1,mort1a4,mort15a59,mort59mais)
+
+for (t in 9:1000) {
+  
+  df[t,1] <- t
+  df[t,2:19] <- df[8,2:19]    # Define o impacto de longo prazo = impacto ultimo periodo
+  
+}
 
 # Montagem da funcao MVPF para o ESF. Admite como argumentos:
 
@@ -151,16 +158,14 @@ mvpf <- function(
     mort59mais,   # Um vetor de impactos sobre mortalidade 59+ anos
     crowdout,     # Um vetor de impactos sobre crowding out da cobertura de saude privada
     emprego,      # Um vetor de impactos sobre emprego
-    matricula     # Um vetor de impactos sobre matricula escolar
+    matricula,    # Um vetor de impactos sobre matricula escolar
+    duracao       # Por quanto tempo o programa é analisado
 ) {
   
   WTP <- 0
   Costs <- 0
   
-  for (t in 1:8) {      # Para calcular o MVPF para um período mais longo,
-                        # completar as estimativas para outros períodos
-                        # em df e aumentar o período de análise nas 
-                        # linhas 179, 210, e 245
+  for (t in 1:duracao) {
     
     WTP <- WTP + assign(paste("wtp",t,sep = "_"),
            ( (- (  mort0a1[t] * frac_0a1 +
@@ -187,78 +192,49 @@ mvpf <- function(
   
 }
 
-# Estimativa de ponto
-for (t in 1:8) {
+# Criação dos vetores de argumento
+
+duracao <- 76  # Duracao da analise, quantos anos o beneficiario aproveita / custa
+timplem <- 0  # Anos desde a implementacao do ESF no munic (refere-se apenas ao impacto do programa)
+
+mort0a1 <- 0; mort1a4 <- 0; mort15a59 <- 0; mort59mais <- 0; crowdout <- 0; emprego <- 0; matricula <- 0
+resultado <- list()
+
+for (t in 1:duracao) {
   
-  x <- df[t,2]; assign(paste("v1",t,sep="_"),x)
-  x <- df[t,4]; assign(paste("v2",t,sep="_"),x)
-  x <- df[t,6]; assign(paste("v3",t,sep="_"),x)
-  x <- df[t,8]; assign(paste("v4",t,sep="_"),x)
-  x <- df[t,10]; assign(paste("c",t,sep="_"),x)
-  x <- df[t,12]; assign(paste("e",t,sep="_"),x)
-  x <- df[t,14]; assign(paste("m",t,sep="_"),x)
+  mort0a1[t] <- df[timplem + t,2]
+  mort1a4[t] <- df[timplem + t,4]
+  mort15a59[t] <- df[timplem + t,6]
+  mort59mais[t] <- df[timplem + t,8]
+  crowdout[t] <- df[timplem + t,10]
+  emprego[t] <- df[timplem + t,12]
+  matricula[t] <- df[timplem + t,14]
   
-  rm(x,t)
 }
-
-mort0a1 <- c(v1_1, v1_2, v1_3, v1_4, v1_5, v1_6, v1_7, v1_8)
-mort1a4 <- c(v2_1, v2_2, v2_3, v2_4, v2_5, v2_6, v2_7, v2_8)
-mort15a59 <- c(v3_1, v3_2, v3_3, v3_4, v3_5, v3_6, v3_7, v3_8)
-mort59mais <- c(v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8)
-crowdout <- c(c_1, c_2, c_3, c_4, c_5, c_6, c_7, c_8)
-emprego <- c(e_1, e_2, e_3, e_4, e_5, e_6, e_7, e_8)
-matricula <- c(m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8)
-
-rm(v1_1, v1_2, v1_3, v1_4, v1_5, v1_6, v1_7, v1_8,
-v2_1, v2_2, v2_3, v2_4, v2_5, v2_6, v2_7, v2_8,
-v3_1, v3_2, v3_3, v3_4, v3_5, v3_6, v3_7, v3_8,
-v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8,
-c_1, c_2, c_3, c_4, c_5, c_6, c_7, c_8,
-e_1, e_2, e_3, e_4, e_5, e_6, e_7, e_8,
-m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8)
   
-mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego, matricula)
-# Resultado de 3.760776
+mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego, matricula, duracao)
 
 # CI por bootstrapping
 
-resultado <- list()
-
 for (i in 1:1000) {
 
-for (t in 1:8) {
+  mort0a1 <- 0; mort1a4 <- 0; mort15a59 <- 0; mort59mais <- 0; crowdout <- 0; emprego <- 0; matricula <- 0
   
-  x <- rnorm(1, df[t,2], df[t,3]) ; assign(paste("v1",t,sep="_"),x)
-  x <- rnorm(1, df[t,4], df[t,5]) ; assign(paste("v2",t,sep="_"),x)
-  x <- rnorm(1, df[t,6], df[t,7]) ; assign(paste("v3",t,sep="_"),x)
-  x <- rnorm(1, df[t,8], df[t,9]) ; assign(paste("v4",t,sep="_"),x)
-  x <- rnorm(1, df[t,10], df[t,11]); assign(paste("c",t,sep="_"),x)
-  x <- rnorm(1, df[t,12], df[t,13]); assign(paste("e",t,sep="_"),x)
-  x <- rnorm(1, df[t,14], df[t,15]); assign(paste("m",t,sep="_"),x)
-  
-  rm(x,t)
-}
+  for (t in 1:duracao) {
+    
+    mort0a1[t] <- rnorm(1, df[timplem + t,2], df[t,3])
+    mort1a4[t] <- rnorm(1, df[timplem + t,4], df[t,5])
+    mort15a59[t] <- rnorm(1, df[timplem + t,6], df[t,7])
+    mort59mais[t] <- rnorm(1, df[timplem + t,8], df[t,9])
+    crowdout[t] <- rnorm(1, df[timplem + t,10], df[t,11])
+    emprego[t] <- rnorm(1, df[timplem + t,12], df[t,13])
+    matricula[t] <- rnorm(1, df[timplem + t,14], df[t,15])
+    
+  }
 
-  mort0a1 <- c(v1_1, v1_2, v1_3, v1_4, v1_5, v1_6, v1_7, v1_8)
-  mort1a4 <- c(v2_1, v2_2, v2_3, v2_4, v2_5, v2_6, v2_7, v2_8)
-  mort15a59 <- c(v3_1, v3_2, v3_3, v3_4, v3_5, v3_6, v3_7, v3_8)
-  mort59mais <- c(v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8)
-  crowdout <- c(c_1, c_2, c_3, c_4, c_5, c_6, c_7, c_8)
-  emprego <- c(e_1, e_2, e_3, e_4, e_5, e_6, e_7, e_8)
-  matricula <- c(m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8)
-  
-rm(v1_1, v1_2, v1_3, v1_4, v1_5, v1_6, v1_7, v1_8,
-   v2_1, v2_2, v2_3, v2_4, v2_5, v2_6, v2_7, v2_8,
-   v3_1, v3_2, v3_3, v3_4, v3_5, v3_6, v3_7, v3_8,
-   v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8,
-   c_1, c_2, c_3, c_4, c_5, c_6, c_7, c_8,
-   e_1, e_2, e_3, e_4, e_5, e_6, e_7, e_8,
-   m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8)
-
-resultado[i] <- mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego, matricula)
+resultado[i] <- mvpf(mort0a1, mort1a4, mort15a59, mort59mais, crowdout, emprego, matricula, duracao)
 
 }
 
 hist(as.numeric(resultado))
 quantile(as.numeric(resultado), probs = c(0.05, 0.95))
-# Resultado de 3.284624, 4.285453
