@@ -1,8 +1,0 @@
-As bases de dados dessa pasta são construidas rodando o do-file `master.do`.
-
-Além das bases de dados por UF `CENSO10_AC.dta` até `CENSO10_TO.dta`, criadas
-pelo loop das linhas `11` a `14` do `master.do`, os dofiles `censo_tratamento_mean.do`
-e `censo_tratamento_lowest.do` criam também as bases `base_20231012_mean.dta` e
-`base_20231012_lowest.dta`.
-
-O arquivo `master.do` requer apenas ps dados baixados da pasta \Raw\.
